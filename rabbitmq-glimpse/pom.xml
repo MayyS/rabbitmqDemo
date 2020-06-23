@@ -11,7 +11,7 @@
 
     <artifactId>rabbitmq-glimpse</artifactId>
 
-    <dependencies>
+    <!--<dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
@@ -34,5 +34,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
+-->
 </project>

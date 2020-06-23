@@ -78,6 +78,6 @@ public class MessagingRabbitApplication {
 
 
     public static void main(String[]args) {
-        SpringApplication.run(MessagingRabbitApplication.class,args).close();
+        SpringApplication.run(MessagingRabbitApplication.class,args);
     }
 }

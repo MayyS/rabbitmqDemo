@@ -28,6 +28,6 @@ public class Runner implements CommandLineRunner {
         System.out.println("Sending message...");
         //模板使用foo.bar.baz与绑定匹配的路由键路由消息到交换机
         rabbitTemplate.convertAndSend(MessagingRabbitApplication.topicExchangeNmae,"foo.bar.baz","Hell from RabbitMQ!");
-        receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
+       // receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
     }
 }
