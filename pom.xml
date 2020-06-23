@@ -12,6 +12,7 @@
         <module>rabbitmq-glimpse</module>
         <module>rabbitmq-demo01</module>
         <module>rabbitmq-topic</module>
+        <module>rabbitmq-demo02</module>
     </modules>
 
     <properties>
