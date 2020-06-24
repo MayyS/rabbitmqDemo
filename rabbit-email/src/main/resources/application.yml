@@ -1,0 +1,46 @@
+
+spring:
+  application:
+    name: rabbit-email
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+    publisher-returns: true
+    publisher-confirms: true
+
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 100
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://123.57.140.15:3306/rabbit-email
+    username: root
+    password: root1234
+
+  mail:
+    host: smtp.qq.com
+    username: 864876906@qq.com
+    password: lencdnbcsctxbche
+    from: 864876906@qq.com
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+logging:
+  level:
+    rabbit:
+      email: debug
+server:
+  port: 8003
