@@ -11,3 +11,9 @@ spring:
     port: 5672
     username: guest
     password: guest
+    #消息确认配置
+
+    #确认消息到达exchange
+    publisher-confirms: true
+    #确认消息到达Queuel
+    publisher-returns: true

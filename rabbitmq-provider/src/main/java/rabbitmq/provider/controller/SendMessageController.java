@@ -73,6 +73,36 @@ public class SendMessageController {
         return "ok";
     }
 
+    /*向不存在的交换机发送消息，触发ConfirmCallback*/
+    @GetMapping("/sendToExchangeNonExist")
+    public String sendToExchangeNonExist(){
+        String exchange="non-exist";
+        //创建map消息
+        Map<String,Object>map=getMessage();
+        //将消息携带绑定键值
+        rabbitTemplate.convertAndSend(exchange,null,map);
+        return "ok";
+    }
+    /*
+    存在交换机，但是不存在队列，ReturnCallback，ConfirmCallback
+    ConfirmCallback -- correlationData ：null
+    ConfirmCallback -- ack ：true
+    ConfirmCallback -- cause ：null
+    ---------
+    ReturnCallback--replyCode : 312
+    ReturnCallback--replyText : NO_ROUTE
+    */
+    @GetMapping("/sendToQueueNonExist")
+    public String sendToQueueNonExist(){
+        String routing="non-queque";
+        //创建map消息
+        Map<String,Object>map=getMessage();
+        //将消息携带绑定键值
+        rabbitTemplate.convertAndSend(DirectRabbitConfig.DIRECT_LONELY_EXCHANGE,routing,map);
+        return "ok";
+    }
+
+
     private Map<String,Object> getMessage(){
         //创建map消息
         String msgId=String.valueOf(UUID.randomUUID());
