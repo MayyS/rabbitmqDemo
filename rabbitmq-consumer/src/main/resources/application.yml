@@ -1,0 +1,13 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: rabbitmq-consumer
+
+  #配置rabbitmq服务器
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest

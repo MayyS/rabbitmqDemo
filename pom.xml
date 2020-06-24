@@ -13,6 +13,9 @@
         <module>rabbitmq-demo01</module>
         <module>rabbitmq-topic</module>
         <module>rabbitmq-demo02</module>
+        <module>rabbit-email</module>
+        <module>rabbitmq-provider</module>
+        <module>rabbitmq-consumer</module>
     </modules>
 
     <properties>
