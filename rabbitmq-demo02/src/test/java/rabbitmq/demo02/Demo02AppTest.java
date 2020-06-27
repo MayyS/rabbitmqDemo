@@ -65,8 +65,8 @@ public class Demo02AppTest {
             return;
         }
         System.out.println(obj.getClass());
-        String txt=new String((byte[]) obj);
-        System.out.println(txt);
+        //String txt=new String((byte[]) obj);
+        //System.out.println(txt);
     }
 
 }

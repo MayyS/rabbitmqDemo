@@ -47,6 +47,11 @@ public class FanoutRabbitConfig {
         return new FanoutExchange(EXCHANGE);
     }
 
+    @Bean
+    public Queue queue(){
+        return new Queue("");
+    }
+
     /**
      * 绑定主题和队列
      * @return

@@ -21,6 +21,7 @@ public class RabbitConfig {
         //设置开启Mandatory,才能触发回调函数,无论消息推送结果怎么样都强制调用回调函数
         rabbitTemplate.setMandatory(true);
 
+        /* 留给具体方法内去定义
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
             @Override
             public void confirm(CorrelationData correlationData, boolean ack, String cause) {
@@ -40,6 +41,7 @@ public class RabbitConfig {
                 System.out.println("ReturnCallback--routingKey : "+routingKey);
             }
         });
+        */
 
 
         return rabbitTemplate;

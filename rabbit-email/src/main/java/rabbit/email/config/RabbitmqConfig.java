@@ -30,6 +30,7 @@ public class RabbitmqConfig {
         rabbitTemplate.setMessageConverter(converter());
 
         // 消息是否成功发送到Exchange
+        //也可以在具体的生产者类中设置
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
             @Override
             public void confirm(CorrelationData correlationData, boolean ack, String cause) {

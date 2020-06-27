@@ -12,6 +12,7 @@ import rabbit.email.mapper.MsgLogMapper;
 import rabbit.email.pojo.Mail;
 import rabbit.email.pojo.MsgLog;
 import rabbit.email.service.MailSendService;
+import sun.nio.cs.ext.MacArabic;
 
 import java.util.UUID;
 
@@ -42,6 +43,14 @@ public class MailSendServiceImpl implements MailSendService {
         //如果MAIL_ROUTING_KEY_NAME不存在，则会调用ReturnCallback（312）、ConfirmCallback(成功)
         //rabbitTemplate.convertAndSend(RabbitmqConfig.MAIL_EXCHANGE_NAME,hoho, MessageHelper.objToMsg(mail),correlationData);
 
+        //为rabbitTemplate设置自己的回调用函数,覆盖RabbitmqConfig中设置的，
+        //setReturnCallback同理
+        //rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
+        //    @Override
+        //    public void confirm(CorrelationData correlationData, boolean ack, String cause) {
+        //        System.out.println("myself confir：");
+        //    }
+        //});
 
         rabbitTemplate.convertAndSend(RabbitmqConfig.MAIL_EXCHANGE_NAME,RabbitmqConfig.MAIL_ROUTING_KEY_NAME, MessageHelper.objToMsg(mail),correlationData);
 

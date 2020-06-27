@@ -19,8 +19,10 @@ public class AckReceiver implements ChannelAwareMessageListener {
     @Override
     public void onMessage(Message message, Channel channel) throws Exception {
         MessageProperties msgProperties=message.getMessageProperties();
-
+        System.out.println("消费模式："+msgProperties.getDeliveryMode());
         long deliverTag=msgProperties.getDeliveryTag();
+        //获得消息来自的队列
+        String  frmQueue=msgProperties.getConsumerQueue();
         try {
             String msg=message.toString();
             String[]msgArray=msg.split("'");
@@ -29,7 +31,10 @@ public class AckReceiver implements ChannelAwareMessageListener {
             String msgData=msgMap.get("messageData");
             String createTime=msgMap.get("createTime");
             System.out.println("AckReceiver : "+msgMap.toString());
+            //一次只取一条数据
+            channel.basicQos(1);
             channel.basicAck(deliverTag,true);
+
         }catch (Exception e){
             //channel.basicReject(deliveryTag, true);//为true会重新放回队列
             channel.basicReject(deliverTag,false);
