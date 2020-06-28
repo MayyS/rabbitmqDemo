@@ -14,6 +14,7 @@ import rabbitmq.provider.config.TopicRabbitConfig;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -151,16 +152,10 @@ public class SendMessageController {
         //exchange used
         String usedExchange=rabbitTemplate.getExchange();
         //reply
-        //String replyAdr="amq.rabbitmq.reply-to";
         String replyAdr="";
-        rabbitTemplate.setReplyAddress(replyAdr);
+        //String replyAdr="rpcReplyQueue";
         rabbitTemplate.convertAndSend(RpcRabbitConfig.EXCHANGE,RpcRabbitConfig.ROUTING,map,correlationData);
         return "oka";
-
-        //利用同步的方式来接受消息
-        //Message message=getMessage(map);
-        //Message rplyStr = rabbitTemplate.sendAndReceive(RpcRabbitConfig.EXCHANGE, RpcRabbitConfig.ROUTING, message);
-        //return rplyStr;
     }
 
     private Message getMessage(Map map){
