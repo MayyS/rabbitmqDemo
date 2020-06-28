@@ -12,6 +12,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+import rabbitmq.provider.config.RpcRabbitConfig;
 
 import java.io.IOException;
 import java.util.Map;
@@ -48,6 +49,17 @@ public class RpcListener {
         //确认
         channel.basicAck(tag,true);
 
+    }
+
+    @RabbitListener(queues = RpcRabbitConfig.REPLY_QUEQUE)
+    public void processRpcFromClient(@Payload String reply, @Headers Map<String,Object> map, Channel channel,Message message) throws IOException {
+        System.out.println("processRpcFromClient-->");
+        System.out.println("reply : "+reply);
+        MessageProperties messageProperties= message.getMessageProperties();
+        System.out.println("-->end");
+        long tag = (long) map.get(AmqpHeaders.DELIVERY_TAG);
+        //确认
+        channel.basicAck(tag,true);
     }
 
 }

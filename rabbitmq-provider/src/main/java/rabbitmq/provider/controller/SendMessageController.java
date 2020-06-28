@@ -1,5 +1,7 @@
 package rabbitmq.provider.controller;
 
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -11,7 +13,9 @@ import rabbitmq.provider.config.DirectRabbitConfig;
 import rabbitmq.provider.config.FanoutRabbitConfig;
 import rabbitmq.provider.config.RpcRabbitConfig;
 import rabbitmq.provider.config.TopicRabbitConfig;
+import rabbitmq.provider.listener.SimpleConsumer;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -29,6 +33,8 @@ public class SendMessageController {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+
 
     @GetMapping("/sendDirectMessage")
     public String sendDirectMessage(){
@@ -121,6 +127,27 @@ public class SendMessageController {
         rabbitTemplate.convertAndSend(rabbitExchange,rabbitRouting,map);
         return "ok";
     }
+
+    @GetMapping("sendRpcByClinet")
+    public String sendRpcByClinet() throws IOException {
+
+        String body="rpc sendRpcByClinet";
+        String correlationId="123456";
+        MessageProperties messageProperties=new MessageProperties();
+        //messageProperties.setReplyTo(RpcRabbitConfig.REPLY_QUEQUE);
+        //Direct reply-to
+        messageProperties.setReplyTo(RpcRabbitConfig.REPLY_TO);
+        messageProperties.setHeader("k1","v1");
+        messageProperties.setHeader("k2","v2");
+        messageProperties.setCorrelationId(correlationId);
+        Message message=new Message(body.getBytes(),messageProperties);
+        rabbitTemplate.send(RpcRabbitConfig.EXCHANGE,RpcRabbitConfig.ROUTING,message);
+
+        return "ok";
+    }
+
+
+
 
     @GetMapping("/sendRpc")
     //public Message sendRpc(){

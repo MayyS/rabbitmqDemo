@@ -1,6 +1,9 @@
 package rabbitmq.consumer.receiver;
 
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.ConfirmListener;
+import com.rabbitmq.client.Return;
+import com.rabbitmq.client.ReturnCallback;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -54,7 +57,7 @@ public class DirectReceiver {
         System.out.println("prcoessRabbitListener : "+map.toString());
     }
 
-    @RabbitListener(queues = RpcRabbitConfig.QUEUE, ackMode = "MANUAL" /* concurrency = "5" */)
+    //@RabbitListener(queues = RpcRabbitConfig.QUEUE, ackMode = "MANUAL" /* concurrency = "5" */)
     public void processRpc01(@Payload  Map data, @Headers Map<String,Object>map, Channel channel,Message message) throws IOException {
         //耗时比较长的操作应该比耗时比较短的少获得任务，而不是轮询派发
         //channel.basicQos(1,true);
@@ -90,32 +93,33 @@ public class DirectReceiver {
        // channel.basicNack(deliverTag,multiply,requeue);
         channel.basicAck(deliverTag,multiply);
     }
-    //
-    //@RabbitListener(queues = RpcRabbitConfig.QUEUE, ackMode = "MANUAL")
-    //public void processRpc02(@Payload  Map data, @Headers Map<String,Object>map, Channel channel) throws IOException {
-    //    channel.basicQos(1,true);
-    //    //System.out.println("processRpc__02 begin : ");
-    //    try {
-    //        TimeUnit.SECONDS.sleep(2);
-    //    } catch (InterruptedException e) {
-    //        e.printStackTrace();
-    //    }
-    //    //@Payload
-    //    System.out.println(data);
-    //
-    //    //headers
-    //    long deliverTag= (long) map.get(AmqpHeaders.DELIVERY_TAG);
-    //    System.out.println("deliverTag : "+deliverTag);
-    //
-    //    //String correlationId = map.get(AmqpHeaders.CORRELATION_ID).toString();
-    //    String correlationId = map.get("spring_returned_message_correlation").toString();
-    //    //System.out.println("correlationId : "+correlationId);
-    //    boolean multiply=false;
-    //    boolean requeue=true;
-    //
-    //    //channel.basicNack(deliverTag,multiply,requeue);
-    //    channel.basicAck(deliverTag,multiply);
-    //    System.out.println("processRpc__02 end : ");
-    //}
+
+    @RabbitListener(queues = RpcRabbitConfig.QUEUE)
+    public void processRpc02(Channel channel) throws IOException {
+
+        ConfirmListener confirmListener=new ConfirmListener() {
+            @Override
+            public void handleAck(long deliveryTag, boolean multiple) throws IOException {
+                System.out.println("confirmListener -- handleAck ");
+            }
+            @Override
+            public void handleNack(long deliveryTag, boolean multiple) throws IOException {
+                System.out.println("confirmListener -- handleNack ");
+            }
+        };
+
+        channel.addConfirmListener(confirmListener);
+        ReturnCallback returnCallback=new ReturnCallback() {
+            @Override
+            public void handle(Return returnMessage) {
+                System.out.println(" returnCallback -- handle");
+            }
+        };
+        channel.addReturnListener(returnCallback);
+
+        channel.basicConsume(RpcRabbitConfig.QUEUE,true,new SimpleConsumer(channel));
+    }
+
+
 
 }

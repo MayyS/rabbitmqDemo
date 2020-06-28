@@ -20,12 +20,20 @@ public class RpcRabbitConfig {
     /** 队列*/
     public static  final String QUEUE="rpcQueue";
 
+    public static  final String REPLY_QUEQUE="rpcReplyQueque";
+    public static  final String REPLY_TO="amq.rabbitmq.reply-to";
+
     /**交换机*/
     public static  final String EXCHANGE="rpcExchange";
 
     @Bean
     public Queue queueRpc(){
         return new Queue(QUEUE);
+    }
+
+    @Bean
+    public Queue queueReply(){
+        return new Queue(REPLY_QUEQUE);
     }
     @Bean
     DirectExchange rpcDirectExchange(){
