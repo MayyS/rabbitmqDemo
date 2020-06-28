@@ -12,13 +12,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FanoutRabbitConfig {
 
-    /*路由键:扇型交换机, 路由键无需配置,配置也不起作用*/
-    /*队列*/
+    /**路由键:扇型交换机, 路由键无需配置,配置也不起作用*/
+    /**队列*/
     public static  final String QUEUE_A="fanout.a";
     public static final String QUEUE_B="fanout.b";
     public static final String QUEUE_C="fanout.c";
 
-    /*交换机*/
+    /**交换机*/
     public static  final String EXCHANGE="SoFanoutExchange";
 
 

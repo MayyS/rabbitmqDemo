@@ -15,15 +15,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TopicRabbitConfig {
 
-    /*路由键*/
+    /**路由键*/
     public static final String ROUTING_ALL="topic.#";
     public static final String ROUTING_SOME="topic.SOME";
 
-    /*队列*/
+    /**队列*/
     public static  final String QUEUE_ALL="topic.ALL";
     public static final String QUEUE_SOME="topic.SOME";
 
-    /*交换机*/
+    /**交换机*/
     public static  final String Topic_EXCHANGE="SoTopicExchange";
 
 

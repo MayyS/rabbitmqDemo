@@ -22,7 +22,9 @@ public class ResendMsg {
     private MsgLogService msgLogService;
     @Autowired
     private RabbitTemplate rabbitTemplate;
-    //最大的投递次数
+    /**
+     * 最大的投递次数
+     */
     private static final int MAX_TRY_COUNT=3;
 
     @Scheduled(cron="0/30 * * * * ?")

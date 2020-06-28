@@ -16,13 +16,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DirectRabbitConfig {
 
-    /*路由键*/
+    /**路由键*/
     public static final String DIRECT_ROUTING="SoDirectRouting";
 
-    /*队列*/
+    /**队列*/
     public static  final String DIRECT_QUEUE="SoDirectQueue";
 
-    /*交换机*/
+    /**交换机*/
     public static  final String DIRECT_EXCHANGE="SoDirectQueue";
 
 

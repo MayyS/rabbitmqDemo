@@ -4,8 +4,7 @@ import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
@@ -25,6 +24,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class DirectReceiver {
 
+    private String rabbitExchange="rabbitExchange";
+    private String rabbitQueue="rabbitQueue";
+    private String rabbitRouting="rabbitRouting";
+
     @RabbitListener(queues = DirectRabbitConfig.DIRECT_QUEUE)
     public void process(Map msg){
         System.out.println("DirectReceiver process:"+msg.toString());
@@ -35,9 +38,20 @@ public class DirectReceiver {
         System.out.println("default process: "+messageProperties.toString());
     }
 
+    @RabbitListener(bindings = {
+            @QueueBinding(value = @Queue(name ="rabbitQueue",durable = "false"),
+            exchange = @Exchange(name = "rabbitExchange", durable = "false"),
+                    key = "rabbitRouting"
+            )
+    })
+    public void prcoessRabbitListener(Map map){
+        System.out.println("prcoessRabbitListener : "+map.toString());
+    }
+
+
     @RabbitListener(queues = RpcRabbitConfig.QUEUE, ackMode = "MANUAL" /* concurrency = "5" */)
-    public void processRpc01(@Payload  Map data, @Headers Map<String,Object>map, Channel channel) throws IOException {
-        //耗时比较长的操作应该比耗时比较短的少获得任务
+    public String processRpc01(@Payload  Map data, @Headers Map<String,Object>map, Channel channel) throws IOException {
+        //耗时比较长的操作应该比耗时比较短的少获得任务，而不是轮询派发
         channel.basicQos(1,true);
         //System.out.println("processRpc___01 begin: ");
         try {
@@ -47,21 +61,29 @@ public class DirectReceiver {
         }
 
         //@Payload
-        //System.out.println(data);
+        System.out.println(data);
 
         //headers
         long deliverTag= (long) map.get(AmqpHeaders.DELIVERY_TAG);
         System.out.println("deliverTag : "+deliverTag);
-
+        //delivermode
+        String delivermode=map.get(AmqpHeaders.DELIVERY_MODE)==null ? "" : map.get(AmqpHeaders.DELIVERY_MODE).toString();
+        //rely-to
+        //String relpy_to=map.get(AmqpHeaders.REPLY_TO).toString();
         //String correlationId = map.get(AmqpHeaders.CORRELATION_ID).toString();
         String correlationId = map.get("spring_returned_message_correlation").toString();
         //System.out.println("correlationId : "+correlationId);
+
+
+
         boolean multiply=false;
         boolean requeue=true;
 
-        //channel.basicNack(deliverTag,multiply,requeue);
-        channel.basicAck(deliverTag,multiply);
+        channel.basicNack(deliverTag,multiply,requeue);
+        //channel.basicAck(deliverTag,multiply);
         System.out.println("processRpc___01 end : ");
+        String reply="processRpc___01 OK...";
+        return reply;
     }
 
     @RabbitListener(queues = RpcRabbitConfig.QUEUE, ackMode = "MANUAL")
@@ -74,7 +96,7 @@ public class DirectReceiver {
             e.printStackTrace();
         }
         //@Payload
-        //System.out.println(data);
+        System.out.println(data);
 
         //headers
         long deliverTag= (long) map.get(AmqpHeaders.DELIVERY_TAG);

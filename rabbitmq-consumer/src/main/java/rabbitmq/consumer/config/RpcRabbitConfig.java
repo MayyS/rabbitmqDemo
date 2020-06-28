@@ -14,13 +14,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RpcRabbitConfig {
 
-    /*路由键*/
+    /**
+     * 路由键
+     */
     public static final String ROUTING="rpcService";
 
-    /*队列*/
+    /**
+     *队列
+     */
     public static  final String QUEUE="rpcQueue";
 
-    /*交换机*/
+    /**
+     * 交换机
+     */
+
     public static  final String EXCHANGE="rpcExchange";
 
     @Bean

@@ -17,3 +17,8 @@ spring:
     publisher-confirms: true
     #确认消息到达Queuel
     publisher-returns: true
+    #配置消费者的每次获取数以及确认方式
+    listener:
+      simple:
+        prefetch: 1
+        acknowledge-mode: manual

@@ -70,6 +70,7 @@ public class SendMessageController {
 
     @GetMapping("/sendFanoutMessage")
     public String sendFanoutMessage(){
+        //MessageProperties
         //创建map消息
         Map<String,Object>map=getMessage();
         //将消息携带绑定键值
@@ -77,7 +78,9 @@ public class SendMessageController {
         return "ok";
     }
 
-    /*向不存在的交换机发送消息，触发ConfirmCallback*/
+    /**
+     * 向不存在的交换机发送消息，触发ConfirmCallback
+     */
     @GetMapping("/sendToExchangeNonExist")
     public String sendToExchangeNonExist(){
         String exchange="non-exist";
@@ -103,6 +106,18 @@ public class SendMessageController {
         Map<String,Object>map=getMessage();
         //将消息携带绑定键值
         rabbitTemplate.convertAndSend(DirectRabbitConfig.DIRECT_LONELY_EXCHANGE,routing,map);
+        return "ok";
+    }
+
+    //通过RabbitListener进行绑定
+    @GetMapping("/sendRabbitListener")
+    public String sendRabbitListener(){
+        String rabbitExchange="rabbitExchange";
+        String rabbitQueue="rabbitQueue";
+        String rabbitRouting="rabbitRouting";
+        //创建map消息
+        Map<String,Object>map=getMessage();
+        rabbitTemplate.convertAndSend(rabbitExchange,rabbitRouting,map);
         return "ok";
     }
 
@@ -136,7 +151,8 @@ public class SendMessageController {
         //exchange used
         String usedExchange=rabbitTemplate.getExchange();
         //reply
-        String replyAdr="amq.rabbitmq.reply-to";
+        //String replyAdr="amq.rabbitmq.reply-to";
+        String replyAdr="";
         rabbitTemplate.setReplyAddress(replyAdr);
         rabbitTemplate.convertAndSend(RpcRabbitConfig.EXCHANGE,RpcRabbitConfig.ROUTING,map,correlationData);
         return "oka";
